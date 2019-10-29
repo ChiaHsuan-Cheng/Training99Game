@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Game</title>
+</head>
+<body>
+    <h3>Training 99</h3>
+    <canvas id= "cvs" width="640" height="480"></canvas>
+    <script>
+       
+       
+
+        舊款寫法
+        let x1=50;
+        let x2=50,y2=100;
+        function refresh(){
+            // ctx.fillRect(X軸,Y軸,高,寬);
+
+            //更新資料
+            x1++;
+            x2++;y2++;
+            //清空資料
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+
+            //重新繪製
+            //每次都更新一個框框
+            ctx.fillRect(x1,50,10,10);
+            ctx.fillRect(x2,y2,10,10);
+        }
+         //排程，每10秒跑一次refresh
+        window.setInterval(refresh,10);
+        
+        
+
+
+       
+    
+    </script>
+      
+</body>
+</html>
