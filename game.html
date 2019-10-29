@@ -8,36 +8,128 @@
 </head>
 <body>
     <h3>Training 99</h3>
-    <canvas id= "cvs" width="640" height="480"></canvas>
+    <canvas id= "cvs" width="640" height="480" ></canvas>
     <script>
-       
-       
+       class Rect{
+            constructor(){
+                this.x=50;
+                this.y=50;
+                
+                this.vx=Math.random()*2+0.5;//0.5~2.5
+                this.vy=Math.random()*2;
+            
+            }
+            update(){
+                this.x++;
+                this.x+=this.vx;
+                this.y+=this.vy;
+                this.vy+=0.04;
 
-        舊款寫法
-        let x1=50;
-        let x2=50,y2=100;
+                //回收機制,告訴主程式，是否刪除
+                return this.x>cvs.width||
+                this.y>cvs.height||
+                this.x<0||
+                this.y<0;
+                
+            }
+            draw(){
+                ctx.fillRect(this.x,this.y,5,5);
+            }
+
+        }
+        
+        class Smoke{
+            constructor(x,y){
+                this.x=x;
+                this.y=y;
+                this.vx=Math.random()*1-0.5;//-0.5~0.5
+                this.vy=Math.random()*2-2.5;//-1~-2.5
+                this.size=20;
+                this.alpha=1;
+            }
+            update(){
+                this.x+=this.vx;
+                this.y+=this.vy;
+                this.size+=0.4;
+                this.alpha-=0.001;
+                if(this.alpha<0.0005){
+                    this.alpha=0;
+                }
+                return this.y<-800||
+                this.alpha==0;
+                
+            }
+            draw(){
+                ctx.save();//儲存當時的畫布設定
+                ctx.globalAlpha=this.alpha;
+                ctx.drawImage(smoke,
+                this.x-this.size/2,
+                this.y-this.size/2,
+                this.size,this.size);
+                ctx.restore();// 恢復之前的儲存的畫布設定
+            }
+
+        }
+
+        class SmokeSystem{
+            constructor(x,y){
+             this.x=x;
+             this.y=y;
+             this.smokes=[];
+            }
+            update(){
+                this.smokes.push(new Smoke(this.x,this.y));
+                for(let i=0;i<this.smokes.length;i++){
+                let isDead=this.smokes[i].update();
+                if(isDead){
+                    this.smokes.splice(i,1);
+                    i--;
+                }
+                }
+              
+            }
+            draw(){
+                for(i=0;i<this.smokes.length;i++){
+                this.smokes[i].draw();
+                }
+
+            }
+        }
+
+        let cvs = document.querySelector("#cvs");
+        let ctx = cvs.getContext("2d");
+        /*物件導向寫法*/
+        let drawables=[new SmokeSystem(300,400),new SmokeSystem(200,400)];
         function refresh(){
-            // ctx.fillRect(X軸,Y軸,高,寬);
-
+           //drawables.push(new Smoke());
+           //drawables.push(new Rect());
             //更新資料
-            x1++;
-            x2++;y2++;
-            //清空資料
+            for(i=0;i<drawables.length;i++){
+                let isDead= drawables[i].update();
+                if(isDead){
+                    drawables.splice(i,1);
+                    i--;
+                }
+            }
+            //清空畫面
             ctx.clearRect(0,0,cvs.width,cvs.height);
 
             //重新繪製
-            //每次都更新一個框框
-            ctx.fillRect(x1,50,10,10);
-            ctx.fillRect(x2,y2,10,10);
+            for(i=0;i<drawables.length;i++){
+                drawables[i].draw();
+            }
         }
-         //排程，每10秒跑一次refresh
-        window.setInterval(refresh,10);
         
-        
-
-
+        //drawables.push(new Rect());
+       //排程，每10秒跑一次refresh
+       //setInterval遊戲開始
+       let smoke =new Image();
+       smoke.src="smoke.png";
+       smoke.addEventListener("load",function(){
+        //才開始遊戲
+            window.setInterval(refresh,10);
+        });
        
-    
     </script>
       
 </body>
