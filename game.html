@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Training 99</title>
+    <title>planeGame</title>
     <script>
         let ga={
             ctx:null,lib:{},
@@ -60,29 +60,30 @@
                 ga.ctx.restore();
             }
         };
-        //建立彈幕
+        //建立子彈們
         ga.lib.Bullet = class{
             constructor(){
                 let seed=Math.random();
                 if(seed<0.25){//to right
                     this.x=0;
                     this.y=Math.random()*ga.ctx.canvas.height;
-                    this.vx=Math.random()*2+0.5;//0.5~2.5
-                    this.vy=Math.random()*1-0.5;//-0.5~0.5
+                    this.vx=Math.random()*2+0.5;
+                    this.vy=Math.random()*1-0.5;
                 }else if(seed<0.5){//to left
                     this.y=Math.random()*ga.ctx.canvas.height;
-                    this.vx=Math.random()*2-2.5;//-0.5~-2.5
-                    this.vy=Math.random()*1-0.5;//-0.5~0.5
+                    this.vx=Math.random()*2-2.5;
+                    this.vy=Math.random()*1-0.5;
                 }else if(seed<0.75){//to bottom
                     this.x=Math.random()*ga.ctx.canvas.width;
                     this.y=0;
-                    this.vx=Math.random()*1-0.5;//-0.5~0.5
-                    this.vy=Math.random()*2+0.5;//0.5~2.5
-                }else {//to top
+                    this.vx=Math.random()*1-0.5;
+                    this.vy=Math.random()*2+0.5;
+
                     this.x=Math.random()*ga.ctx.canvas.width;
                     this.y=ga.ctx.canvas.height;
-                    this.vx=Math.random()*1-0.5;//-0.5~0.5
-                    this.vy=Math.random()*2-2.5;//0.5~2.5
+                    this.vx=Math.random()*1-0.5;
+                    this.vy=Math.random()*2-2.5;
+
                 }
                 
                 this.size=2;
@@ -157,7 +158,7 @@
             let img = new Image();
             img.src=src;
             img.addEventListener("load",function(){
-                //將載入成功的圖片物件，覆蓋進我們的結構中
+                //將載入成功的圖片物件，覆蓋進結構中
                 ga.res.imgs[key]=img;
                 //報告資源載入成功一次
                 resourceLoaded();
@@ -177,12 +178,15 @@
             document.querySelector("#loading").style.display="none";
             document.querySelector("#menu").style.display="block";
             document.querySelector("#main").style.display="none";
+            document.querySelector("#explain").style.display="none";
+
             
         };
 
         function initGame(){
             document.querySelector("#menu").style.display="none";
             document.querySelector("#main").style.display="block";
+            document.querySelector("#explain").style.display="block";
             //加入鍵盤控制
             document.addEventListener("keydown",keydown);
             document.addEventListener("keyup",keyup);
@@ -290,6 +294,9 @@
     <audio id=explosion-sound src="explosion.mp3"></audio>
     <div id="loading" >Loading</div>
     <div id="menu" style="display:none">Menu</div>
+    <div id=explain style="display:none">
+        <h3>鍵盤上下左右控制飛機</h3>
+    </div>
     <button onclick="initGame();">start</button>
     <div id="main" style="display:none">
         <canvas id= "cvs" width="640" height="480" ></canvas>
